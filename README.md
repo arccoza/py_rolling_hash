@@ -19,12 +19,12 @@ When the window is full, ie. you've added as many items as `size`, the function 
 
 `hash` - The value of the hash, calculated from `feed`.
 
-#### Rabin_Fingerprint.calc(window, seed)
+#### Rabin_Fingerprint.calc(window[, seed])
 Calculates a hash value from a window once off, no rolling/feeding possible.
 
 `window` - A list, string or other iterable to calculate the hash.
 
-`seed` - The prime number base for the calculation.
+`seed` - The prime number base for the calculation (optional).
 
 ##Use
 ```py
