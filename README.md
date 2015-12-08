@@ -5,14 +5,14 @@ Rabin fingerprint rolling hash.
 #### Rabin_Fingerprint(size[, seed])
 Creates a new object, with a window size `size`, which you can feed values.
 
-`size` - length of the window for the rolling hash (number of bytes/chars).
-`seed` - prime number used as the base in the hash calculation (optional).
+`size` - Length of the window for the rolling hash (number of bytes/chars).
+`seed` - Prime number used as the base in the hash calculation (optional).
 
 #### Rabin_Fingerprint.feed(items)
 Calculates the hash in a rolling manner, when the window is full value are removed from the end and 
 added at to the beginning.
 
-`items` - an iterable collection of values to add to the hash, can be a string or list of values.
+`items` - An iterable collection of values to add to the hash, can be a string or list of values.
 When the window is full, ie. you've added as many items as `size`, the function will start rolling.
 
 #### Rabin_Fingerprint.hash
