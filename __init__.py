@@ -11,7 +11,8 @@ class Rabin_Fingerprint(object):
 		self.seed = seed or 101#10007
 		self._maxfact = self.seed**(self.size-1) #store the prime ^ size-1 value, so we don't have to calc it everytime.
 
-	def calc(self, window, seed):
+	@staticmethod
+	def calc(window, seed):
 		w = window
 		n= len(window)
 		p = seed
@@ -50,6 +51,7 @@ class Rabin_Fingerprint(object):
 		# pprint(h)
 		# pprint(w)
 		self.hash = h
+		return h
 
 	def __str__(self):
 		return str(self.hash)
@@ -60,6 +62,6 @@ class Rabin_Fingerprint(object):
 
 if __name__ == '__main__':
 	f = Rabin_Fingerprint(3)
-	# f.calc('bra', 101)
+	Rabin_Fingerprint.calc('bra', 101)
 	f.feed('abra')
 	pprint(len(f))
