@@ -4,18 +4,18 @@ from collections import deque
 
 
 class Rabin_Fingerprint(object):
-	def __init__(self, size, seed=None):
+	def __init__(self, size, base=None):
 		self.size = size
 		self.window = deque(maxlen=size)
 		self.hash = None
-		self.seed = seed or 101#10007
-		self._maxfact = self.seed**(self.size-1) #store the prime ^ size-1 value, so we don't have to calc it everytime.
+		self.base = base or 101#10007
+		self._maxfact = self.base**(self.size-1) #store the prime ^ size-1 value, so we don't have to calc it everytime.
 
 	@staticmethod
-	def calc(window, seed=None):
+	def calc(window, base=None):
 		w = window
 		n= len(window)
-		p = seed or 101
+		p = base or 101
 		h = 0
 
 		for i in range(0, n):
@@ -32,7 +32,7 @@ class Rabin_Fingerprint(object):
 		s = self.size
 		n = None
 		w = self.window
-		p = self.seed
+		p = self.base
 		ps = self._maxfact
 		h = 0
 
