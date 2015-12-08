@@ -2,11 +2,11 @@
 Rabin fingerprint rolling hash.
 
 ## API
-#### Rabin_Fingerprint(size[, seed])
+#### Rabin_Fingerprint(size[, base])
 Creates a new object, with a window size `size`, which you can feed values.
 
 `size` - Length of the window for the rolling hash (number of bytes/chars).
-`seed` - Prime number used as the base in the hash calculation (optional).
+`base` - Prime number used as the base in the hash calculation (optional).
 
 #### Rabin_Fingerprint.feed(items)
 Calculates the hash in a rolling manner, when the window is full value are removed from the end and 
@@ -19,12 +19,12 @@ When the window is full, ie. you've added as many items as `size`, the function 
 
 `hash` - The value of the hash, calculated from `feed`.
 
-#### Rabin_Fingerprint.calc(window[, seed])
+#### Rabin_Fingerprint.calc(window[, base])
 Calculates a hash value from a window once off, no rolling/feeding possible.
 
 `window` - A list, string or other iterable to calculate the hash.
 
-`seed` - The prime number base for the calculation (optional).
+`base` - The prime number base for the calculation (optional).
 
 ##Use
 ```py
