@@ -35,14 +35,19 @@ class Rabin_Fingerprint(object):
 		p = self.seed
 		ps = self._maxfact
 		h = 0
+
+		# if isinstance(items, str):
+		# 	items = [ord(v) for v in items]
+
 		for i, v in enumerate(items):
-			n = s - 1 - len(w)
+			l = len(w)
+			n = s - 1 - l
 			n = n if n > 0 else 0
 			try:
 				v = ord(v)
 			except TypeError as ex:
 				pass
-			if len(w) == s:
+			if l == s:
 				h = ((h - (w[0] * ps)) * p) + v
 				w.append(v)
 			else:
@@ -58,6 +63,7 @@ class Rabin_Fingerprint(object):
 
 	def __len__(self):
 		return len(self.window)
+
 
 
 if __name__ == '__main__':
