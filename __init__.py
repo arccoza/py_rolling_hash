@@ -3,12 +3,6 @@ from six.moves import range
 from collections import deque
 
 
-# Python3 support for removal of xrange.
-# try:
-# 	_range = xrange
-# except NameError as ex:
-# 	_range = range
-
 class Rabin_Fingerprint(object):
 	def __init__(self, size, seed=None):
 		self.size = size
@@ -64,7 +58,8 @@ class Rabin_Fingerprint(object):
 		return len(self.window)
 
 
-f = Rabin_Fingerprint(3)
-# f.calc('bra', 101)
-f.feed('abra')
-pprint(len(f))
+if __name__ == '__main__':
+	f = Rabin_Fingerprint(3)
+	# f.calc('bra', 101)
+	f.feed('abra')
+	pprint(len(f))
