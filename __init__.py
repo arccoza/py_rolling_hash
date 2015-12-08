@@ -12,10 +12,10 @@ class Rabin_Fingerprint(object):
 		self._maxfact = self.seed**(self.size-1) #store the prime ^ size-1 value, so we don't have to calc it everytime.
 
 	@staticmethod
-	def calc(window, seed):
+	def calc(window, seed=None):
 		w = window
 		n= len(window)
-		p = seed
+		p = seed or 101
 		h = 0
 
 		for i in range(0, n):
