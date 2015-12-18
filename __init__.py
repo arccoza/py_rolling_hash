@@ -12,9 +12,12 @@ class RabinFingerprint(object):
 		self.size = size
 		self.window = deque(maxlen=size)
 		self.cur = len(self.window)
-		self.hash = None
+		self.hash_a = 0
+		self.hash = 0
 		self.base = base or 101#10007
 		self._maxfact = self.base**(self.size-1) #store the prime ^ size-1 value, so we don't have to calc it everytime.
+		self._mod = 1 << 16
+		print(self._mod)
 
 	@staticmethod
 	def calc(window, base=None):
@@ -33,29 +36,18 @@ class RabinFingerprint(object):
 		# print(h)
 		return h
 		
-	def feed(self, items, is_str=False):
+	def feed_many(self, items, is_str=False):
 		s = self.size
 		n = None
 		w = self.window
 		l = self.cur
 		p = self.base
 		ps = self._maxfact
-		h = 0
-		# is_str = isinstance(items, str)
-
-		# if isinstance(items, str):
-		# 	items = [ord(v) for v in items]
-
-		# for i, v in enumerate(items):
+		h = self.hash_a
+		
 		for v in items:
-			# l = len(w)
-			# print(l, i)
 			n = s - 1 - l
 			n = n if n > 0 else 0
-			# try:
-			# 	v = ord(v)
-			# except TypeError as ex:
-			# 	pass
 			if is_str:
 				v = ord(v)
 			if l == s:
@@ -64,13 +56,43 @@ class RabinFingerprint(object):
 				w.append(v)
 			else:
 				h += (p**n) * v
-				# h += numpy.multiply(numpy.power(p,n), v)
 				w.append(v)
 				l += 1
 		# pprint(h)
 		# pprint(w)
 		self.cur = l
-		self.hash = h
+		self.hash_a = h
+		self.hash = h % self._mod
+		# print(self.hash)
+		return h
+
+	def feed(self, v, is_str=False):
+		s = self.size
+		n = None
+		w = self.window
+		l = self.cur
+		p = self.base
+		ps = self._maxfact
+		h = self.hash_a
+		
+		n = s - 1 - l
+		n = n if n > 0 else 0
+		if is_str:
+			v = ord(v)
+		if l == s:
+			h = ((h - (w[0] * ps)) * p) + v
+			# h = fn(h, w, ps, p, v)
+			w.append(v)
+		else:
+			h += (p**n) * v
+			w.append(v)
+			l += 1
+		# pprint(h)
+		# pprint(w)
+		self.cur = l
+		self.hash_a = h
+		self.hash = h % self._mod
+		# print(self.hash)
 		return h
 
 	def __str__(self):
@@ -86,8 +108,11 @@ class RsyncChecksum(object):
 		self.window = deque(maxlen=size)
 		self.cur = len(self.window)
 		# self.hashA = 0
-		self.ihash = 0 # Interim hash (A).
-		self.hash = 0 # Final hash (B).
+		self.hash_a = 0 # Interim hash (A).
+		self.hash_b = 0 # Final hash (B).
+		self.hash = 0
+		self._mod = 1 << 16
+		print(self._mod)
 
 	@staticmethod
 	def calc(window):
@@ -106,12 +131,12 @@ class RsyncChecksum(object):
 		# print(b)
 		return b
 		
-	def feed(self, items, is_str=False):
+	def feed_many(self, items, is_str=False):
 		s = self.size
 		w = self.window
 		l = self.cur
-		a = self.ihash
-		b = self.hash
+		a = self.hash_a
+		b = self.hash_b
 
 		for v in items:
 			if is_str:
@@ -132,9 +157,40 @@ class RsyncChecksum(object):
 		# pprint(b)
 		# pprint(w)
 		self.cur = l
-		self.ihash = a
-		self.hash = b
-		# self.hash = b
+		self.hash_a = a
+		self.hash_b = b
+		self.hash = b % self._mod
+		return b
+
+	def feed(self, v, is_str=False):
+		s = self.size
+		w = self.window
+		l = self.cur
+		a = self.hash_a
+		b = self.hash_b
+
+		if is_str:
+			v = ord(v)
+		if l == s:
+			# a -= w[0]
+			# a += v
+			a = a - w[0] + v
+			# b -= s * w[0]
+			# b += a
+			b = b - (s * w[0]) + a
+			w.append(v)
+		else:
+			a += v
+			b += a
+			w.append(v)
+			l += 1
+		# pprint(b)
+		# pprint(w)
+		self.cur = l
+		self.hash_a = a
+		self.hash_b = b
+		self.hash = b % self._mod
+		# print(self.hash)
 		return b
 
 	def __str__(self):
@@ -146,11 +202,13 @@ class RsyncChecksum(object):
 
 
 if __name__ == '__main__':
-	# f = RabinFingerprint(3)
-	# RabinFingerprint.calc('bra', 101)
-	# f.feed('abr', is_str=True)
-	# pprint(len(f))
-	f = RsyncChecksum(3)
-	RsyncChecksum.calc('bra')
+	f = RabinFingerprint(3)
+	RabinFingerprint.calc('abr', 101)
 	f.feed('abra', is_str=True)
+	# f.feed_1('a', is_str=True)
+	# pprint(len(f))
+	# f = RsyncChecksum(3)
+	# RsyncChecksum.calc('bra')
+	# f.feed('abr', is_str=True)
+	# f.feed_1('a', is_str=True)
 	# pprint(len(f))
